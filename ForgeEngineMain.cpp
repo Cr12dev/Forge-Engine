@@ -24,7 +24,7 @@ int main() {
 
 
     // Crear la ventana
-    //glfwWindowHint(GLFW_PLATFORM, GLFW_PLATFORM_WAYLAND);
+    
     GLFWwindow* window = glfwCreateWindow(1200, 800, "Mi Primera Ventana OpenGL", nullptr, nullptr);
     if (!window) {
         std::cout << "Error: No se pudo crear la ventana GLFW" << std::endl;
