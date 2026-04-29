@@ -36,7 +36,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
     // ==================== Inicializar GLEW ====================
-    glewExperimental = GL_TRUE; 
+    //glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         std::cout << "Error: No se pudo inicializar GLEW" << std::endl;
         glfwTerminate();
@@ -47,7 +47,7 @@ int main() {
 
     //shader, recibe las matrices y las aplica a la posicion final
     //un poquito mejor explicado mas adelante
-    const char *vertexshaderorigen = "#version 460 core\n"
+    const char *vertexshaderorigen = "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
         "layout (location= 1) in vec3 color;\n"
         "uniform mat4 proyeccion;\n"
@@ -65,7 +65,7 @@ int main() {
     glShaderSource(vertexShader, 1, &vertexshaderorigen, NULL);
     glCompileShader(vertexShader);
     //recibe el color del vertex y lo aplica
-    const char *fragmentShaderOrigen = "#version 460 core\n"
+    const char *fragmentShaderOrigen = "#version 330 core\n"
         "out vec4 fragColor;\n"
         "in vec3 color2;\n"
         "void main()\n"
