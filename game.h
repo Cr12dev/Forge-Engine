@@ -44,6 +44,7 @@ void Start() {
     Window = glfwGetCurrentContext();
     SetWindowTitle("PONG 1.0");
 }
+//h
 
 void Update() {
     if (iaMakingError) {
