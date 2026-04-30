@@ -1,72 +1,41 @@
-cmake_minimum_required(VERSION 3.16)
-project(Forge2Engine)
+cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_STANDARD 17)
+# Nombre del proyecto
+project(ForgeEngine)
+
+# Forzamos el estándar C++23 como tienes en VS Code
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_BUILD_TYPE Debug)
-#adadtar al compilador que uses de c/c++
-set(MSYS2_PATH "C:/msys64/mingw64")
-set(GLFW_PATH "${MSYS2_PATH}")
-set(GLEW_PATH "${MSYS2_PATH}")
-set(OPENGL_PATH "${MSYS2_PATH}")
+# Evitar el aviso de OpenGL (preferir la versión moderna GLVND)
+set(OpenGL_GL_PREFERENCE GLVND)
 
-include_directories(${GLFW_PATH}/include)
-include_directories(${GLEW_PATH}/include)
-include_directories(${OPENGL_PATH}/include)
+# 1. Buscar las librerías necesarias en el sistema
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glfw3 REQUIRED)
 
+# 2. Definir los archivos fuentes
+# Solo incluimos el Main porque tú usas #include "script.cpp" dentro de él.
+# Esto emula el comportamiento de "archivo único" de VS Code.
 set(SOURCES
     ForgeEngineMain.cpp
-    script.cpp
 )
 
-set(HEADERS
-    Anvil.h
-    script.h
+# 3. Crear el ejecutable
+add_executable(Forge2Engine ${SOURCES})
+
+# 4. Indicar dónde están los archivos de cabecera (.h)
+target_include_directories(Forge2Engine PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${GLEW_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
-
-find_package(OpenGL REQUIRED)
-
-target_link_libraries(${PROJECT_NAME} 
-    ${OPENGL_LIBRARIES}
-    ${GLFW_PATH}/lib/libglfw3.a
-    ${GLEW_PATH}/lib/libglew32.a
-    opengl32
-    glu32
-    gdi32
-    user32
-    kernel32
+# 5. Enlazar las librerías al ejecutable (el -lGLEW -lglfw etc. de VS Code)
+target_link_libraries(Forge2Engine PRIVATE 
+    OpenGL::GL
+    GLEW::GLEW
+    glfw
+    dl
+    pthread
 )
-
-if(WIN32)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE 
-        _WIN32_WINNT=0x0601
-        WIN32_LEAN_AND_MEAN
-        NOMINMAX
-    )
-    #adadtar a tu conveniencia
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${GLFW_PATH}/bin/glfw3.dll
-        ${GLEW_PATH}/bin/glew32.dll
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>
-    )
-endif()
-
-target_compile_options(${PROJECT_NAME} PRIVATE
-    $<$<CONFIG:Debug>:-g -O0 -Wall -Wextra>
-    $<$<CONFIG:Release>:-O3 -DNDEBUG>
-)
-
-if(MINGW)
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
-    target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE GLEW_STATIC)
-endif()
-
-if(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
-endif()
