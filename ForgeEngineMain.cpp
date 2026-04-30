@@ -3,9 +3,10 @@
 #include <iostream>
 #include <math.h>
 #include "Anvil.h"
-#include "script.h"
 #include <vector>
 
+void Start();
+void Update();
 
 //======================USAR NINJA EN CMAKE========================
 
