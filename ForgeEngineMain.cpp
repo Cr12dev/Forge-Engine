@@ -3,9 +3,12 @@
 #include <iostream>
 #include <math.h>
 #include "Anvil.h"
-#include "script.h"
 #include <vector>
+#include <fstream>
+#include <sstream>
 
+void Start();
+void Update();
 
 //======================USAR NINJA EN CMAKE========================
 
@@ -16,6 +19,20 @@ float dontAskWhy;
 
 void error_callback(int error, const char* description) {
     std::cerr << "Error de GLFW (" << error << "): " << description << std::endl;
+}
+
+//=====================LEER ARCHIVOS PARA SHADERS==================
+std::string loadFile(const char* path) {
+    std::ifstream file(path);
+    std::stringstream buffer;
+
+    if (!file.is_open()) {
+        std::cerr << "No se pudo abrir el shader: " << path << std::endl;
+        return "";
+    }
+
+    buffer << file.rdbuf();
+    return buffer.str();
 }
 
 
@@ -54,35 +71,26 @@ int main() {
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
     //shader, recibe las matrices y las aplica a la posicion final
-    //un poquito mejor explicado mas adelante
-    const char *vertexshaderorigen = "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "layout (location= 1) in vec3 color;\n"
-        "uniform mat4 proyeccion;\n"
-        "uniform mat4 rotacion;\n"
-        "uniform mat4 translacion;\n"
-        "uniform mat4 escala;\n"
-        "out vec3 color2;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = proyeccion * translacion * rotacion * escala* vec4(aPos, 1.0);\n"
-        "   color2 = color;\n"
-        "}\0";
+    std::string vertexSource = loadFile("./SHADERS/vertex.glsl");
+    std::string fragmentSource = loadFile("./SHADERS/fragment.glsl");
+
+    if (vertexSource.empty() || fragmentSource.empty()) {
+        std::cerr << "Error cargando shaders desde archivos" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    const char* vertexShaderSource = vertexSource.c_str();
+    const char* fragmentShaderSource = fragmentSource.c_str();
+
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexshaderorigen, NULL);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
-    //recibe el color del vertex y lo aplica
-    const char *fragmentShaderOrigen = "#version 330 core\n"
-        "out vec4 fragColor;\n"
-        "in vec3 color2;\n"
-        "void main()\n"
-        "{\n"
-        "   fragColor = vec4(color2, 1.0f);\n"
-        "}\0";
+
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderOrigen, NULL);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
     glCompileShader(fragmentShader);
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
