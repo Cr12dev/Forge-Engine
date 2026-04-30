@@ -9,10 +9,10 @@ class AnvilObject;
 
 
 //listas para que el motor las pueda recorrer y renderizar y aplicar sus propiedades como posicion, rotacion etc....
-inline std::vector<std::vector<float>> cosasARenderizar;
-inline std::vector<AnvilObject*> objetosReferenciados;
+extern std::vector<std::vector<float>> cosasARenderizar;
+extern std::vector<AnvilObject*> objetosReferenciados;
 //delta time oculto para pasar desde el motor
-inline float dontAskWhy;
+extern float dontAskWhy;
 
 struct Vector2 {
     float x = 0.0f;
