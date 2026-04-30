@@ -57,11 +57,12 @@ int main() {
     //un poquito mejor explicado mas adelante
     const char *vertexshaderorigen = "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
-        "layout (location= 1) in vec3 color;\n"
         "uniform mat4 proyeccion;\n"
+        "uniform vec3 color;\n"
         "uniform mat4 rotacion;\n"
         "uniform mat4 translacion;\n"
         "uniform mat4 escala;\n"
+        "out vec3 color2;\n"
         "void main()\n"
         "{\n"
         "   gl_Position = proyeccion * translacion * rotacion * escala* vec4(aPos, 1.0);\n"
@@ -74,7 +75,7 @@ int main() {
     //recibe el color del vertex y lo aplica
     const char *fragmentShaderOrigen = "#version 330 core\n"
         "out vec4 fragColor;\n"
-        "uniform vec3 color2;\n"
+        "in vec3 color2;\n"
         "void main()\n"
         "{\n"
         "   fragColor = vec4(color2, 1.0f);\n"
@@ -139,7 +140,7 @@ int main() {
     int rotacionID = glGetUniformLocation(shaderProgram, "rotacion");
     int translacionID = glGetUniformLocation(shaderProgram, "translacion");
     int escalaID = glGetUniformLocation(shaderProgram, "escala");
-    int colorID = glGetUniformLocation(shaderProgram, "color2");
+    int colorID = glGetUniformLocation(shaderProgram, "color");
     float ultimoframe;
     glUniformMatrix4fv(idUniform, 1, GL_FALSE, matrizProye);
     float primerFrame = 0.0f;
