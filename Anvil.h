@@ -64,9 +64,9 @@ struct Vector3 {
 };
 
 struct Color {
-    float r = 1.0f;
-    float g = 1.0f;
-    float b = 1.0f;
+    float r = 0.0f;
+    float g = 0.0f;
+    float b = 0.0f;
     Color(float r = 0, float g = 0, float b = 0) : r(r), g(g), b(b) {}
     Color operator+(const Color& other) {
         return Color(r + other.r, g + other.g, b + other.b);
@@ -94,6 +94,7 @@ class AnvilObject {
         Vector2 Scale = Vector2(100.0f, 100.0f);
     //agrega el objeto creado a una lista para luego ser recorrido y aplicar sus propiedad al shader
     AnvilObject() {
+        this->color = Color(1.0f, 1.0f, 1.0f);
         objetosReferenciados.push_back(this);
     }
     //crea un cuadrado con los parametros ancho y alto
