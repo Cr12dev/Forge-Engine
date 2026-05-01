@@ -160,7 +160,7 @@ int main() {
     int rotacionID = glGetUniformLocation(shaderProgram, "rotacion");
     int translacionID = glGetUniformLocation(shaderProgram, "translacion");
     int escalaID = glGetUniformLocation(shaderProgram, "escala");
-    int colorID = glGetUniformLocation(shaderProgram, "color");
+    int objectColorID = glGetUniformLocation(shaderProgram, "objectColor");
     float ultimoframe;
     glUniformMatrix4fv(idUniform, 1, GL_FALSE, matrizProye);
 
@@ -193,7 +193,7 @@ int main() {
             glUniformMatrix4fv(rotacionID, 1, GL_FALSE, matrizRotacion);
             glUniformMatrix4fv(translacionID, 1, GL_FALSE, matrizTraslacion);
             glUniformMatrix4fv(escalaID, 1, GL_FALSE, matrizEscala);
-            glUniform3fv(colorID, 1, colorfloat);
+            glUniform3fv(objectColorID, 1, colorfloat);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, lista[i].size()/6);
         }   
 
