@@ -7,7 +7,8 @@
 #include <fstream>
 #include <sstream>
 // #include "EXAMPLE/PONG.h"
-#include "game.h"
+#include "EXAMPLE/SIMPLE.h"
+// #include "game.h"
 
 void Start();
 void Update();
