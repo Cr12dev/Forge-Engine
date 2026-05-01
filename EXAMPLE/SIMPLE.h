@@ -18,18 +18,37 @@
 //No se preocupen por esto, es solo para que el motor pueda acceder a estas variables y objetos desde el script
 
 AnvilObject Suelo;
-AnvilObject Perosnaje;
+AnvilObject Personaje;
 GLFWwindow* Window;
 Collision2D colision;
 
+float velocidadY = 0.0f;
 float speedplayer = 80.0f;
+float gravedad = -9.81f;
+
+void PhysicsUpdate() {
+    float dt = deltaTime();
+
+    velocidadY += gravedad * dt;
+
+    Personaje.Position.y += velocidadY * dt;
+
+    float sueloTop = Suelo.Position.y + (3.0f / 2.0f);
+    float personajeBottom = Personaje.Position.y - (10.0f / 2.0f);
+
+    if (personajeBottom <= sueloTop) {
+        Personaje.Position.y = sueloTop + (10.0f / 2.0f);
+
+        velocidadY = 0.0f;
+    }
+}
 
 void Start() {
     Suelo.CreateQuad(1080, 3);
     Personaje.CreateQuad(10, 10);
 
     Suelo.Position = Vector2(0.0f, -100.0f);
-    Perosnaje.Position = Vector2(0.0f, 0.0f);
+    Personaje.Position = Vector2(0.0f, 0.0f);
 
     Window = glfwGetCurrentContext();
 
@@ -40,8 +59,18 @@ void Start() {
 }
 
 void Update() {
-    std::cout << "Posicion del jugador: (" << Perosnaje.Position.x << ", " << Perosnaje.Position.y << ")" << std::endl;
-    if (glfwGetKey(Window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(Window, GLFW_KEY_D) == GLFW_PRESS && Suelo.Position.y < 80.0f) {
-        Pala.Position.x += 150.0f * deltaTime();
+    std::cout << "Posicion del jugador: (" << Personaje.Position.x << ", " << Personaje.Position.y << ")" << std::endl;
+    if (glfwGetKey(Window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(Window, GLFW_KEY_D) == GLFW_PRESS) {
+        Personaje.Position.x += 150.0f * deltaTime();
     }
+    if (glfwGetKey(Window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(Window, GLFW_KEY_A) == GLFW_PRESS) {
+        Personaje.Position.x -= 150.0f * deltaTime();
+    }
+    if (glfwGetKey(Window, GLFW_KEY_SPACE) == GLFW_PRESS && velocidadY == 0.0f) {
+        velocidadY = 20.0f;
+    }
+
+    //Hay que declararlo para que funcione
+    PhysicsUpdate();
 }
+
