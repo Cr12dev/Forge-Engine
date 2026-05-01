@@ -1,11 +1,10 @@
-#include <iostream>
-#include <GL/glew.h> 
-#include <GLFW/glfw3.h>
+#pragma once
 #include "Anvil.h"
 
+extern AnvilObject holamundo;
+extern AnvilObject holamundo2;
+extern GLFWwindow* Window;
+extern Collision2D colision;
 
-AnvilObject Template;
-
-void Start() {}
-
-void Update() {}
+void Start();
+void Update();

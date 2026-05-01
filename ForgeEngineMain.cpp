@@ -1,10 +1,15 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include "Anvil.h"
-#include "script.h"
+#include "game.h"
 #include <vector>
+
+AnvilObject holamundo;
+AnvilObject holamundo2;
+GLFWwindow* Window;
+Collision2D colision;
 
 
 //======================USAR NINJA EN CMAKE========================
@@ -13,6 +18,8 @@ std::vector<std::vector<float>> cosasARenderizar;
 std::vector<AnvilObject*> objetosReferenciados;
 //delta time oculto para pasar desde el motor
 float dontAskWhy;
+
+
 
 void error_callback(int error, const char* description) {
     std::cerr << "Error de GLFW (" << error << "): " << description << std::endl;
@@ -33,7 +40,7 @@ int main() {
 
     // Crear la ventana
     
-    GLFWwindow* window = glfwCreateWindow(1200, 800, "Ventana de ForgeEngine", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1200, 650, "Ventana de ForgeEngine", nullptr, nullptr);
     if (!window) {
         std::cout << "Error: No se pudo crear la ventana GLFW" << std::endl;
         glfwTerminate();
@@ -44,7 +51,7 @@ int main() {
     glfwMakeContextCurrent(window);
 
     // ==================== Inicializar GLEW ====================
-    glewExperimental = GL_TRUE;
+    //glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         std::cout << "Error: No se pudo inicializar GLEW" << std::endl;
         glfwTerminate();
@@ -57,8 +64,8 @@ int main() {
     //un poquito mejor explicado mas adelante
     const char *vertexshaderorigen = "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
-        "layout (location= 1) in vec3 color;\n"
         "uniform mat4 proyeccion;\n"
+        "uniform vec3 color;\n"
         "uniform mat4 rotacion;\n"
         "uniform mat4 translacion;\n"
         "uniform mat4 escala;\n"
@@ -131,15 +138,22 @@ int main() {
         0.0f, 0.0f, 1.0f, 0.0f, 
         0.0f, 0.0f, 0.0f, 1.0f
     };
+    float colorfloat[] = {
+        1.0f, 1.0f, 1.0f
+    };
     auto& lista = InternalPassVerticesList();
     auto& objetosLista = InternalPassReferenceObjects();
     int idUniform = glGetUniformLocation(shaderProgram, "proyeccion");
     int rotacionID = glGetUniformLocation(shaderProgram, "rotacion");
     int translacionID = glGetUniformLocation(shaderProgram, "translacion");
     int escalaID = glGetUniformLocation(shaderProgram, "escala");
+    int colorID = glGetUniformLocation(shaderProgram, "color");
     float ultimoframe;
     glUniformMatrix4fv(idUniform, 1, GL_FALSE, matrizProye);
+
     float primerFrame = 0.0f;
+    
+
     Start();
     // ==================== Bucle principal ====================
     while (!glfwWindowShouldClose(window)) {
@@ -163,16 +177,21 @@ int main() {
             matrizRotacion[5] = cos((objetosLista[i]->Rotation.z) * (M_PI / 180));
             matrizEscala[0] = objetosLista[i]->Scale.x / 100;
             matrizEscala[5] = objetosLista[i]->Scale.y / 100;
+            colorfloat[0] = objetosLista[i]->color.r;
+            colorfloat[1] = objetosLista[i]->color.g;
+            colorfloat[2] = objetosLista[i]->color.b;
             glUniformMatrix4fv(rotacionID, 1, GL_FALSE, matrizRotacion);
             glUniformMatrix4fv(translacionID, 1, GL_FALSE, matrizTraslacion);
             glUniformMatrix4fv(escalaID, 1, GL_FALSE, matrizEscala);
+            glUniform3fv(colorID, 1, colorfloat);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, lista[i].size()/6);
         }   
 
-        primerFrame = glfwGetTime();
+        float primerFrame = glfwGetTime();
         float deltatime = primerFrame - ultimoframe;
         ultimoframe = primerFrame;
         InternalPassDontAsk(deltatime);
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -181,3 +200,4 @@ int main() {
     glfwTerminate();
     return 0;
 }
+//h

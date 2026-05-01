@@ -4,15 +4,16 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <string>
 
 class AnvilObject;
 
 
 //listas para que el motor las pueda recorrer y renderizar y aplicar sus propiedades como posicion, rotacion etc....
-extern std::vector<std::vector<float>> cosasARenderizar;
-extern std::vector<AnvilObject*> objetosReferenciados;
+inline std::vector<std::vector<float>> cosasARenderizar;
+inline std::vector<AnvilObject*> objetosReferenciados;
 //delta time oculto para pasar desde el motor
-extern float dontAskWhy;
+inline float dontAskWhy;
 
 struct Vector2 {
     float x = 0.0f;
@@ -63,6 +64,18 @@ struct Vector3 {
     }
 };
 
+
+
+struct Color {
+    float r = 0.0f;
+    float g = 0.0f;
+    float b = 0.0f;
+    Color(float r = 0, float g = 0, float b = 0) : r(r), g(g), b(b) {}
+    Color operator+(const Color& other) {
+        return Color(r + other.r, g + other.g, b + other.b);
+    }
+};
+
 class AnvilObject;
 
 class Collision2D {
@@ -70,6 +83,7 @@ class Collision2D {
     bool Bool;
     AnvilObject* Object;
 };
+
 
 class AnvilObject {
     //tiene sus propiedades que luego el motor las procesa y las manda a la matriz del shader
@@ -79,9 +93,11 @@ class AnvilObject {
         int Width, Height;
         Vector2 Position;
         Vector3 Rotation;
+        Color color;
         Vector2 Scale = Vector2(100.0f, 100.0f);
     //agrega el objeto creado a una lista para luego ser recorrido y aplicar sus propiedad al shader
     AnvilObject() {
+        this->color = Color(1.0f, 1.0f, 1.0f);
         objetosReferenciados.push_back(this);
     }
     //crea un cuadrado con los parametros ancho y alto
@@ -113,20 +129,16 @@ class AnvilObject {
         collision2d.Bool = false;
         collision2d.Object = nullptr;
 
+        //  AABB de "este" objeto (usamos el centro)
         float anguloRad = this->Rotation.z * (M_PI / 180.0f);
-        float c = std::abs(std::cos(anguloRad));
-        float s = std::abs(std::sin(anguloRad));
+        float c = std::abs(cos(anguloRad));
+        float s = std::abs(sin(anguloRad));
+    
+        // El tamaño envolvente
+        float thisW_env = (this->Width * c) + (this->Height * s);
+        float thisH_env = (this->Width * s) + (this->Height * c);
 
-        // Corregimos el tamaño de colisión para que coincida con el shader.
-        // Como tu shader renderiza al doble (width*2) debido a la escala de 100,
-        // usamos (Width * 2) y (Height * 2) como base para la envolvente.
-        float colWidth = this->Width * 2.0f; 
-        float colHeight = this->Height * 2.0f;
-
-        float thisW_env = (colWidth * c) + (colHeight * s);
-        float thisH_env = (colWidth * s) + (colHeight * c);
-
-        // 3. Bordes desde el centro
+        // Calculamos los bordes de "this" desde su centro
         float thisMinX = this->Position.x - (thisW_env / 2.0f);
         float thisMaxX = this->Position.x + (thisW_env / 2.0f);
         float thisMinY = this->Position.y - (thisH_env / 2.0f);
@@ -136,21 +148,20 @@ class AnvilObject {
             AnvilObject* otro = objetosReferenciados[i];
 
             if (otro != this) {
+                // AABB del "otro" objeto
                 float angRadOtro = otro->Rotation.z * (M_PI / 180.0f);
-                float cO = std::abs(std::cos(angRadOtro));
-                float sO = std::abs(std::sin(angRadOtro));
-        
-                float otroColW = otro->Width * 2.0f;
-                float otroColH = otro->Height * 2.0f;
-
-                float otroW_env = (otroColW * cO) + (otroColH * sO);
-                float otroH_env = (otroColW * sO) + (otroColH * cO);
+                float cO = std::abs(cos(angRadOtro));
+                float sO = std::abs(sin(angRadOtro));
+            
+                // Calculamos los bordes de "otro" desde su centro
+                float otroW_env = (otro->Width * cO) + (otro->Height * sO);
+                float otroH_env = (otro->Width * sO) + (otro->Height * cO);
 
                 float otroMinX = otro->Position.x - (otroW_env / 2.0f);
                 float otroMaxX = otro->Position.x + (otroW_env / 2.0f);
                 float otroMinY = otro->Position.y - (otroH_env / 2.0f);
                 float otroMaxY = otro->Position.y + (otroH_env / 2.0f);
-
+                // Comprobación AABB estándar
                 bool check1 = (thisMaxX >= otroMinX && otroMaxX >= thisMinX);
                 bool check2 = (thisMaxY >= otroMinY && otroMaxY >= thisMinY);
 
@@ -190,5 +201,12 @@ inline void InternalPassDontAsk(float deltaaa)
     dontAskWhy = deltaaa;
 };
 
+inline void SetWindowTitle(const char* title) {
+    GLFWwindow* window = glfwGetCurrentContext();
+    if (window) {
+        glfwSetWindowTitle(window, title);
+    }
+}
+//h
 
 
