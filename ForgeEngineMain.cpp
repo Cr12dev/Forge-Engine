@@ -6,22 +6,34 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+// #include "EXAMPLE/PONG.h"
+#include "game.h"
 
 void Start();
 void Update();
 
 //======================USAR NINJA EN CMAKE========================
 
-std::vector<std::vector<float>> cosasARenderizar;
-std::vector<AnvilObject*> objetosReferenciados;
+// std::vector<std::vector<float>> cosasARenderizar;
+// std::vector<AnvilObject*> objetosReferenciados;
 //delta time oculto para pasar desde el motor
-float dontAskWhy;
+// float dontAskWhy;
 
 void error_callback(int error, const char* description) {
     std::cerr << "Error de GLFW (" << error << "): " << description << std::endl;
 }
 
 //=====================LEER ARCHIVOS PARA SHADERS==================
+
+/**
+ * Lee los archivos necesarios para el sistema de shaders
+ * @param path Direccion de los ficheros de los shaders
+ * ``` c++
+ * //Ejemplo de un buen uso
+ * std::string vertexSource = loadFile("./SHADERS/vertex.glsl");
+*  std::string fragmentSource = loadFile("./SHADERS/fragment.glsl");
+ * ```
+ */
 std::string loadFile(const char* path) {
     std::ifstream file(path);
     std::stringstream buffer;

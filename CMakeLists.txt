@@ -39,4 +39,11 @@ target_link_libraries(Forge2Engine PRIVATE
     dl
     pthread
 )
-#h
+
+# 6. Copiar las carpetas necesarias a la carpeta de BUILD
+add_custom_command(TARGET Forge2Engine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_CURRENT_SOURCE_DIR}/SHADERS"
+            "${CMAKE_CURRENT_BINARY_DIR}/SHADERS"
+    COMMENT "Copiando recursos necesarios para el ejecutable"
+)
