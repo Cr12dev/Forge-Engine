@@ -80,6 +80,11 @@ struct Color {
 
 class AnvilObject;
 
+enum PrimitiveType {
+    TRIANGLE_STRIP,
+    TRIANGLE_FAN
+};
+
 class Collision2D {
     public:
     bool Bool;
@@ -97,6 +102,7 @@ class AnvilObject {
         Vector3 Rotation;
         Color color; // Propiedad para declarar el color del objeto
         Vector2 Scale = Vector2(100.0f, 100.0f);
+        PrimitiveType primitiveType = TRIANGLE_STRIP;
     //agrega el objeto creado a una lista para luego ser recorrido y aplicar sus propiedad al shader
     AnvilObject() {
         this->color = Color(1.0f, 1.0f, 1.0f);
@@ -133,6 +139,48 @@ class AnvilObject {
         };
         cosasARenderizar.push_back(ListaVertices);
     };
+    /*
+     * @brief Crea un circulo con el parametro del radio
+     * @param radio radio de la circunferencia
+     ``` 
+     * @example
+     * AnvilObject obj;
+     * obj.CreateCircle(50);
+     ```
+     */
+    void CreateCircle(int radio){
+        float medidaRadio = radio / 50.0f;
+        Width = radio * 2;
+        Height = radio * 2;
+        primitiveType = TRIANGLE_FAN;
+        
+        int numSegments = 32;
+        std::vector<float> ListaVertices;
+        
+        // Centro del circulo (primer vertice del triangle fan)
+        ListaVertices.push_back(0.0f);
+        ListaVertices.push_back(0.0f);
+        ListaVertices.push_back(0.0f);
+        ListaVertices.push_back(1.0f);
+        ListaVertices.push_back(1.0f);
+        ListaVertices.push_back(1.0f);
+        
+        // Generar vertices alrededor del circulo
+        for (int i = 0; i <= numSegments; i++) {
+            float angle = (2.0f * M_PI * i) / numSegments;
+            float x = cos(angle) * medidaRadio;
+            float y = sin(angle) * medidaRadio;
+            
+            ListaVertices.push_back(x);
+            ListaVertices.push_back(y);
+            ListaVertices.push_back(0.0f);
+            ListaVertices.push_back(1.0f);
+            ListaVertices.push_back(1.0f);
+            ListaVertices.push_back(1.0f);
+        }
+        
+        cosasARenderizar.push_back(ListaVertices);
+    }
     // Falta por arreglar
     // Sistema abba con adaptacion a la rotacion (no funcionaba)
     // Sistema actual arreglo por chat gpt (sigue sin funcionar)

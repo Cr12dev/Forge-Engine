@@ -32,7 +32,7 @@ float mulYPelota = 1.0f;
 void Start() {
     Pala.CreateQuad(2, 20);
     Pala2.CreateQuad(2, 20);
-    Pelota.CreateQuad(1,1);
+    Pelota.CreateCircle(2);
     Pala.Position = Vector2(-100.0f, 0.0f);
     Pala2.Position = Vector2(100.0f, 0.0f);
     
