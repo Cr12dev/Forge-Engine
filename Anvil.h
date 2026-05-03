@@ -6,6 +6,9 @@
 #include <math.h>
 #include <string>
 
+ #define STB_IMAGE_IMPLEMENTATION
+   #include "stb_image.h"
+
 class AnvilObject;
 
 
@@ -103,6 +106,7 @@ class AnvilObject {
         Color color; // Propiedad para declarar el color del objeto
         Vector2 Scale = Vector2(100.0f, 100.0f);
         PrimitiveType primitiveType = TRIANGLE_STRIP;
+        unsigned int textureID = 0;
     //agrega el objeto creado a una lista para luego ser recorrido y aplicar sus propiedad al shader
     AnvilObject() {
         this->color = Color(1.0f, 1.0f, 1.0f);
@@ -132,10 +136,10 @@ class AnvilObject {
         Width=width; 
         Height=height;
         std::vector<float> ListaVertices = {
-            -mitadAncho,  mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, // Arriba-Izquierda
-            -mitadAncho, -mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, // Abajo-Izquierda
-            mitadAncho,  mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, // Arriba-Derecha
-            mitadAncho, -mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f  // Abajo-Derecha
+            -mitadAncho,  mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Arriba-Izquierda
+            -mitadAncho, -mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Abajo-Izquierda
+            mitadAncho,  mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Arriba-Derecha
+            mitadAncho, -mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f  // Abajo-Derecha
         };
         cosasARenderizar.push_back(ListaVertices);
     };
@@ -164,12 +168,16 @@ class AnvilObject {
         ListaVertices.push_back(1.0f);
         ListaVertices.push_back(1.0f);
         ListaVertices.push_back(1.0f);
+        ListaVertices.push_back(0.5f);
+        ListaVertices.push_back(0.5f);
         
         // Generar vertices alrededor del circulo
         for (int i = 0; i <= numSegments; i++) {
             float angle = (2.0f * M_PI * i) / numSegments;
             float x = cos(angle) * medidaRadio;
             float y = sin(angle) * medidaRadio;
+            float u = 0.5f + cos(angle) * 0.5f;
+            float v = 0.5f + sin(angle) * 0.5f;
             
             ListaVertices.push_back(x);
             ListaVertices.push_back(y);
@@ -177,6 +185,8 @@ class AnvilObject {
             ListaVertices.push_back(1.0f);
             ListaVertices.push_back(1.0f);
             ListaVertices.push_back(1.0f);
+            ListaVertices.push_back(u);
+            ListaVertices.push_back(v);
         }
         
         cosasARenderizar.push_back(ListaVertices);
@@ -208,12 +218,12 @@ class AnvilObject {
             AnvilObject* otro = objetosReferenciados[i];
 
             if (otro != this) {
-                // AABB del "otro" objeto
+                // AABB 
                 float angRadOtro = otro->Rotation.z * (M_PI / 180.0f);
                 float cO = std::abs(cos(angRadOtro));
                 float sO = std::abs(sin(angRadOtro));
             
-                // Calculamos los bordes de "otro" desde su centro
+                
                 float otroW_env = (otro->Width * cO) + (otro->Height * sO);
                 float otroH_env = (otro->Width * sO) + (otro->Height * cO);
 
@@ -221,7 +231,8 @@ class AnvilObject {
                 float otroMaxX = otro->Position.x + (otroW_env / 2.0f);
                 float otroMinY = otro->Position.y - (otroH_env / 2.0f);
                 float otroMaxY = otro->Position.y + (otroH_env / 2.0f);
-                // Comprobación AABB estándar
+
+                // Comprobación AABB 
                 bool check1 = (thisMaxX >= otroMinX && otroMaxX >= thisMinX);
                 bool check2 = (thisMaxY >= otroMinY && otroMaxY >= thisMinY);
 
@@ -277,6 +288,34 @@ inline void SetBackgroundColor(float r, float g, float b) {
 inline Color GetBackgroundColor() {
     return backgroundColor;
 }
+
+inline unsigned int LoadTexture(const char* path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    //Configuracion de la textura
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Cargar la imagen, aqui es necesario el uso de una nueva libreria la cual es: stb_image.h
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
+    if (data) {
+        GLenum format = (nrChannels == 4) ? GL_RGBA : GL_RGB;
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        stbi_image_free(data);
+    } else {
+        std::cerr << "Error cargando textura: " << path << std::endl;
+    }
+    
+    return textureID;
+}
+
 //h
 
 
