@@ -9,10 +9,11 @@ out vec2 TexCoord;
 uniform mat4 proyeccion;
 uniform mat4 rotacion;
 uniform mat4 translacion;
+uniform mat4 escalaPrivada;
 uniform mat4 escala;
 
 void main() {
-    gl_Position = proyeccion * translacion * rotacion * escala * vec4(aPos, 1.0);
+    gl_Position = proyeccion * translacion * rotacion * (escala * escalaPrivada) * vec4(aPos, 1.0);
     ourColor = aColor;
     TexCoord = aTexCoord;
 }

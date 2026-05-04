@@ -13,6 +13,13 @@
 void Start();
 void Update();
 
+float vertices[] = {
+    -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,1.0f, 1.0f,
+    -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,1.0f,
+    1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f
+};
+
 //======================USAR NINJA EN CMAKE========================
 
 // std::vector<std::vector<float>> cosasARenderizar;
@@ -118,7 +125,7 @@ int main() {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, 2000, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     //color
@@ -155,6 +162,12 @@ int main() {
         0.0f, 0.0f, 1.0f, 0.0f, 
         0.0f, 0.0f, 0.0f, 1.0f
     };
+    float matrizEscalaPrivada[] = {
+        1.0f, 0.0f, 0.0f, 0.0f, 
+        0.0f, 1.0f, 0.0f, 0.0f, 
+        0.0f, 0.0f, 1.0f, 0.0f, 
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
     float colorfloat[] = {
         1.0f, 1.0f, 1.0f
     };
@@ -164,6 +177,7 @@ int main() {
     int rotacionID = glGetUniformLocation(shaderProgram, "rotacion");
     int translacionID = glGetUniformLocation(shaderProgram, "translacion");
     int escalaID = glGetUniformLocation(shaderProgram, "escala");
+    int escalaPrivadaID = glGetUniformLocation(shaderProgram, "escalaPrivada");
     int objectColorID = glGetUniformLocation(shaderProgram, "objectColor");
     float ultimoframe;
     glUniformMatrix4fv(idUniform, 1, GL_FALSE, matrizProye);
@@ -179,8 +193,8 @@ int main() {
         //aplicamos estas propiedades al shader de los objetos en la lista y dibujamos
         //y esto se vuelve a repetir con todos los objetos en las listas creados
         for(size_t i = 0; i < lista.size(); i++) {
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, lista[i].size() * sizeof(float), lista[i].data());
+            matrizEscalaPrivada[0] = lista[i][0];
+            matrizEscalaPrivada[5] = lista[i][1]; 
             matrizTraslacion[12] = objetosLista[i]->Position.x / 100.0f;
             matrizTraslacion[13] = objetosLista[i]->Position.y / 100.0f;
             if (objetosLista[i]->Rotation.z >= 360) {
@@ -197,6 +211,7 @@ int main() {
             colorfloat[2] = objetosLista[i]->color.b;
             glUniformMatrix4fv(rotacionID, 1, GL_FALSE, matrizRotacion);
             glUniformMatrix4fv(translacionID, 1, GL_FALSE, matrizTraslacion);
+            glUniformMatrix4fv(escalaPrivadaID, 1, GL_FALSE, matrizEscalaPrivada);
             glUniformMatrix4fv(escalaID, 1, GL_FALSE, matrizEscala);
             glUniform3fv(objectColorID, 1, colorfloat);
             
@@ -213,7 +228,7 @@ int main() {
             }
             
             GLenum drawMode = (objetosLista[i]->primitiveType == TRIANGLE_FAN) ? GL_TRIANGLE_FAN : GL_TRIANGLE_STRIP;
-            glDrawArrays(drawMode, 0, lista[i].size()/8);
+            glDrawArrays(drawMode, 0, 4);
         }   
 
         float deltatime = glfwGetTime() - ultimoframe;

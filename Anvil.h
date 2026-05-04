@@ -136,10 +136,7 @@ class AnvilObject {
         Width=width; 
         Height=height;
         std::vector<float> ListaVertices = {
-            -mitadAncho,  mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Arriba-Izquierda
-            -mitadAncho, -mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Abajo-Izquierda
-            mitadAncho,  mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Arriba-Derecha
-            mitadAncho, -mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f  // Abajo-Derecha
+            mitadAncho, mitadAlto, 1.0f
         };
         cosasARenderizar.push_back(ListaVertices);
     };

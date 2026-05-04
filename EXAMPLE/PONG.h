@@ -1,7 +1,7 @@
 #include <iostream>
 #include <GL/glew.h> 
 #include <GLFW/glfw3.h>
-#include "Anvil.h"
+#include "../Anvil.h"
 
 //====================IMPORTANTE=====================   
 //Si vas a usar este script renombrar a "script.h" y agregarlo al proyecto
