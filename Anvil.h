@@ -188,9 +188,6 @@ class AnvilObject {
         
         cosasARenderizar.push_back(ListaVertices);
     }
-    // Falta por arreglar
-    // Sistema abba con adaptacion a la rotacion (no funcionaba)
-    // Sistema actual arreglo por chat gpt (sigue sin funcionar)
     Collision2D CheckCollision() {
         Collision2D collision2d;
         collision2d.Bool = false;
@@ -206,10 +203,10 @@ class AnvilObject {
         float thisH_env = (this->Width * s) + (this->Height * c);
 
         // Calculamos los bordes de "this" desde su centro
-        float thisMinX = this->Position.x - (thisW_env / 2.0f);
-        float thisMaxX = this->Position.x + (thisW_env / 2.0f);
-        float thisMinY = this->Position.y - (thisH_env / 2.0f);
-        float thisMaxY = this->Position.y + (thisH_env / 2.0f);
+        float thisMinX = this->Position.x - (thisW_env);
+        float thisMaxX = this->Position.x + (thisW_env);
+        float thisMinY = this->Position.y - (thisH_env);
+        float thisMaxY = this->Position.y + (thisH_env);
 
         for (size_t i = 0; i < objetosReferenciados.size(); i++) {
             AnvilObject* otro = objetosReferenciados[i];
@@ -224,10 +221,10 @@ class AnvilObject {
                 float otroW_env = (otro->Width * cO) + (otro->Height * sO);
                 float otroH_env = (otro->Width * sO) + (otro->Height * cO);
 
-                float otroMinX = otro->Position.x - (otroW_env / 2.0f);
-                float otroMaxX = otro->Position.x + (otroW_env / 2.0f);
-                float otroMinY = otro->Position.y - (otroH_env / 2.0f);
-                float otroMaxY = otro->Position.y + (otroH_env / 2.0f);
+                float otroMinX = otro->Position.x - (otroW_env);
+                float otroMaxX = otro->Position.x + (otroW_env);
+                float otroMinY = otro->Position.y - (otroH_env);
+                float otroMaxY = otro->Position.y + (otroH_env);
 
                 // Comprobación AABB 
                 bool check1 = (thisMaxX >= otroMinX && otroMaxX >= thisMinX);
