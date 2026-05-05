@@ -1,7 +1,7 @@
 #include <iostream>
 #include <GL/glew.h> 
 #include <GLFW/glfw3.h>
-#include "Anvil.h"
+#include "../Anvil.h"
 
 //====================IMPORTANTE=====================   
 //Si vas a usar este script renombrar a "script.h" y agregarlo al proyecto
@@ -34,7 +34,7 @@ Collision2D colision;
 
 float velocidadY = 0.0f;
 float speedplayer = 80.0f;
-float gravedad = -9.81f; //Gravedad de la tierra
+float gravedad = -90.8010f; //Gravedad de la tierra
 
 /**
  * Funcion donde se encuentra la lógica de las Fisicas
@@ -85,7 +85,7 @@ void Update() {
         Personaje.Position.x -= moveSpeed * deltaTime();
     }
     if (glfwGetKey(Window, GLFW_KEY_SPACE) == GLFW_PRESS && velocidadY == 0.0f) {
-        velocidadY = 20.0f;
+        velocidadY = 90.0f;
     }
 
     //Hay que declararlo para que funcione
