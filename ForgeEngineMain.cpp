@@ -228,7 +228,8 @@ int main() {
             }
             
             GLenum drawMode = (objetosLista[i]->primitiveType == TRIANGLE_FAN) ? GL_TRIANGLE_FAN : GL_TRIANGLE_STRIP;
-            glDrawArrays(drawMode, 0, 4);
+            int vertexCount = lista[i].size() / 8; // Cada vértice tiene 8 floats (3 pos + 3 color + 2 texcoord)
+            glDrawArrays(drawMode, 0, vertexCount);
         }   
 
         float deltatime = glfwGetTime() - ultimoframe;

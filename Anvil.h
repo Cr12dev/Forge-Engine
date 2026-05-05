@@ -135,8 +135,17 @@ class AnvilObject {
         float mitadAlto  = medidaAlto / 2.0f;
         Width=width; 
         Height=height;
+        
+        // 4 vértices con: posición(x,y,z), color(r,g,b), coordenadas textura(u,v)
         std::vector<float> ListaVertices = {
-            mitadAncho, mitadAlto, 1.0f
+            // Vértice 1 (top-right)
+            mitadAncho, mitadAlto, 0.0f,    1.0f, 1.0f, 1.0f,    1.0f, 1.0f,
+            // Vértice 2 (bottom-right)
+            mitadAncho, -mitadAlto, 0.0f,   1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
+            // Vértice 3 (top-left)
+            -mitadAncho, mitadAlto, 0.0f,   1.0f, 1.0f, 1.0f,    0.0f, 1.0f,
+            // Vértice 4 (bottom-left)
+            -mitadAncho, -mitadAlto, 0.0f,  1.0f, 1.0f, 1.0f,    0.0f, 0.0f
         };
         cosasARenderizar.push_back(ListaVertices);
     };
