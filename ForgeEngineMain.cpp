@@ -6,7 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include "EXAMPLE/PONG.h"
+#include "EXAMPLE/RENDIMIENTO.h"
 //#include "EXAMPLE/SIMPLE.h"
 // #include "game.h"
 
