@@ -6,7 +6,6 @@
             "type": "shell",
             "command": "g++-13",
             "args": [
-                "-g",
                 "-std=c++23",
                 "-fdiagnostics-color=always",
                 "${file}",

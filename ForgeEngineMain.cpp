@@ -10,8 +10,7 @@
 //#include "EXAMPLE/SIMPLE.h"
 // #include "game.h"
 
-void Start();
-void Update();
+
 
 float vertices[] = {
     -1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,1.0f, 1.0f,
@@ -19,6 +18,10 @@ float vertices[] = {
     1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f,1.0f,
     1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f
 };
+
+
+
+
 
 //======================USAR NINJA EN CMAKE========================
 
@@ -55,9 +58,9 @@ std::string loadFile(const char* path) {
     return buffer.str();
 }
 
-int main() {
-    
 
+
+int main() {
     glfwSetErrorCallback(error_callback);
     // ==================== Inicializar GLFW ====================
     if (!glfwInit()) {
@@ -172,17 +175,20 @@ int main() {
         1.0f, 1.0f, 1.0f
     };
     auto& lista = InternalPassVerticesList();
-    auto& objetosLista = InternalPassReferenceObjects();
+    std::vector<AnvilObject*> objetosLista = InternalPassReferenceObjects();
     int idUniform = glGetUniformLocation(shaderProgram, "proyeccion");
     int rotacionID = glGetUniformLocation(shaderProgram, "rotacion");
     int translacionID = glGetUniformLocation(shaderProgram, "translacion");
-    int escalaID = glGetUniformLocation(shaderProgram, "escala");
+    int escalaID = glGetUniformLocation(shaderProgram, "escala"); 
     int escalaPrivadaID = glGetUniformLocation(shaderProgram, "escalaPrivada");
     int objectColorID = glGetUniformLocation(shaderProgram, "objectColor");
+    int texturaID = glGetUniformLocation(shaderProgram, "ourTexture");
     float ultimoframe;
     glUniformMatrix4fv(idUniform, 1, GL_FALSE, matrizProye);
 
     Start();
+    Update();
+
     // ==================== Bucle principal ====================
     while (!glfwWindowShouldClose(window)) {
         glClearColor(GetBackgroundColor().r, GetBackgroundColor().g, GetBackgroundColor().b, 1.0f);
@@ -209,6 +215,7 @@ int main() {
             colorfloat[0] = objetosLista[i]->color.r;
             colorfloat[1] = objetosLista[i]->color.g;
             colorfloat[2] = objetosLista[i]->color.b;
+            
             glUniformMatrix4fv(rotacionID, 1, GL_FALSE, matrizRotacion);
             glUniformMatrix4fv(translacionID, 1, GL_FALSE, matrizTraslacion);
             glUniformMatrix4fv(escalaPrivadaID, 1, GL_FALSE, matrizEscalaPrivada);
@@ -222,13 +229,12 @@ int main() {
             if (hasTexture) {
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, objetosLista[i]->textureID);
-                glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
+                glUniform1i(texturaID, 0);
             } else {
                 glBindTexture(GL_TEXTURE_2D, 0);
             }
             
-            GLenum drawMode = (objetosLista[i]->primitiveType == TRIANGLE_FAN) ? GL_TRIANGLE_FAN : GL_TRIANGLE_STRIP;
-            glDrawArrays(drawMode, 0, 4);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }   
 
         float deltatime = glfwGetTime() - ultimoframe;

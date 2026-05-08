@@ -26,8 +26,8 @@ float mulYPelota = 1.0f;
 
 void Start() {
     window = glfwGetCurrentContext();
-    
-    for (int i = 0; i <= 10000; i++)
+    srand(time(0));
+    for (int i = 0; i < 100000; i++)
     {
         AnvilObject* nuevoObjeto = new AnvilObject(); 
         nuevoObjeto->CreateQuad(2, 10);
@@ -39,10 +39,10 @@ void Start() {
 }
 
 void Update() {
-    srand(time(0));
+    
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
-        for (int i = 0; i <= 10000; i++)
+        for (int i = 0; i < 100000; i++)
         {
         
             cosas[i]->Position += Vector2(((rand() % 100) / 30), ((rand() % 100) / 30));

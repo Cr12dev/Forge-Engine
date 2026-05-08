@@ -18,6 +18,8 @@ inline std::vector<AnvilObject*> objetosReferenciados;
 //delta time oculto para pasar desde el motor
 inline float dontAskWhy;
 
+
+
 struct Vector2 {
     float x = 0.0f;
     float y = 0.0f;
