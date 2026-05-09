@@ -20,14 +20,12 @@ GLFWwindow* window;
 
 
 //=======================Funciones del script========================
-float speedPelota = 100.0f;
-float mulXPelota = 1.0f;
-float mulYPelota = 1.0f;
 
 void Start() {
+    std::cout << "Dale a la tecla W" << std::endl;
     window = glfwGetCurrentContext();
     srand(time(0));
-    for (int i = 0; i < 100000; i++)
+    for (int i = 0; i < 1000000; i++)
     {
         AnvilObject* nuevoObjeto = new AnvilObject(); 
         nuevoObjeto->CreateQuad(2, 10);
@@ -42,16 +40,13 @@ void Update() {
     
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
-        for (int i = 0; i < 100000; i++)
+        for (int i = 0; i < 1000000; i++)
         {
         
             cosas[i]->Position += Vector2(((rand() % 100) / 30), ((rand() % 100) / 30));
 
         }
     }
-    else
-    {
-        std::cout << "Dale a la tecla W" << std::endl;
-    }
+    std::cout << deltaTime() << std::endl;
 
 }

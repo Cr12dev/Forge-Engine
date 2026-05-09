@@ -111,7 +111,7 @@ class AnvilObject {
         unsigned int textureID = 0;
     //agrega el objeto creado a una lista para luego ser recorrido y aplicar sus propiedad al shader
     AnvilObject() {
-        this->color = Color(1.0f, 1.0f, 1.0f);
+        this->color = Color(255, 255, 255);
         objetosReferenciados.push_back(this);
     }
     //crea un cuadrado con los parametros ancho y alto

@@ -7,6 +7,10 @@
             "command": "g++-13",
             "args": [
                 "-std=c++23",
+                "-O3", 
+                "-march=native", 
+                "-ffast-math", 
+                "-flto", 
                 "-fdiagnostics-color=always",
                 "${file}",
                 "-o",

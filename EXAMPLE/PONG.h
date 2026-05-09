@@ -42,9 +42,9 @@ void Start() {
     Window = glfwGetCurrentContext();
 
     //COLORS
-    Pala.color = Color(1.0f, 1.0f, 0.0f);
-    Pala2.color = Color(1.0f, 0.0f, 0.0f);
-    Pelota.color = Color(1.0f, 1.0f, 0.0f);
+    Pala.color = Color(255, 255, 0);
+    Pala2.color = Color(255, 0, 0);
+    Pelota.color = Color(255, 255, 0);
 
     //Añadir una textura al objeto
 }
@@ -69,28 +69,28 @@ void Update() {
     colision1 = Pelota.CheckCollision();
     if (colision1.Bool)
     {
-        colision1.Object->color = Color(0.0f, 1.0f, 0.0f);
+        colision1.Object->color = Color(0, 255, 0);
         mulXPelota *= -1;
     }
     Pelota.Position += Vector2((speedPelota * mulXPelota) * deltaTime(), (speedPelota * mulYPelota) * deltaTime());
     if (Pelota.Position.y > 100.0f) {
         mulYPelota *= -1;
+        Pelota.Position.y -= 1.0f;
     }
     else if (Pelota.Position.y < -100.0f) {
         mulYPelota *= -1;
+        Pelota.Position.y += 1.0f;
     }
     if (Pelota.Position.x > 150.0f)
     {
         mulXPelota *= -1;
-    }
-    
-    
-    if (Pelota.Position.x < -150.0f)
-    {
-        mulXPelota = 1.0f;
-        mulYPelota = 1.0f;
+        mulYPelota *= -1;
         Pelota.Position = Vector2 (0.0f, 0.0f);
     }
-
-    
+    if (Pelota.Position.x < -150.0f)
+    {
+        mulXPelota *= -1;
+        mulYPelota *= -1;
+        Pelota.Position = Vector2 (0.0f, 0.0f);
+    }
 }
