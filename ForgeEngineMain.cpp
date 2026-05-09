@@ -8,7 +8,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include "EXAMPLE/RENDIMIENTO.h"
+#include "EXAMPLE/PONG.h"
 
 float vertices[] = {
     -1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
@@ -44,14 +44,15 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     GLFWwindow* window = glfwCreateWindow(1200, 650, "Ventana de ForgeEngine", nullptr, nullptr);
     if (!window) {
         std::cout << "Error: No se pudo crear la ventana GLFW" << std::endl;
         glfwTerminate();
         return -1;
     }
-
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(0);
 
     if (glewInit() != GLEW_OK) {
         std::cout << "Error: No se pudo inicializar GLEW" << std::endl;
@@ -158,8 +159,10 @@ int main() {
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
             glBufferData(GL_SHADER_STORAGE_BUFFER, matricesParaEnviar.size() * sizeof(float), NULL, GL_DYNAMIC_DRAW);
         }
-        float* ptr = matricesParaEnviar.data(); 
+        
         if (elementosAntes > 0) {
+            float* ptr = matricesParaEnviar.data(); 
+            #pragma omp simd
             for (size_t i = 0; i < objetosLista.size(); i++) {
                 size_t base = i * floatsAEnviar;
                 ptr[base] = lista[i][0];
@@ -179,7 +182,7 @@ int main() {
                 ptr[base+11] = 1.0f; //padding
             }
 
-            //glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
             glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, matricesParaEnviar.size() * sizeof(float), matricesParaEnviar.data());
 
             bool hasTexture = (objetosLista[0]->textureID != 0);

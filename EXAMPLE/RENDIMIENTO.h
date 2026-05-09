@@ -27,7 +27,7 @@ void Start() {
     srand(time(0));
     for (int i = 0; i < 1000000; i++)
     {
-        AnvilObject* nuevoObjeto = new AnvilObject(); 
+        AnvilObject nuevoObjeto = new AnvilObject(); 
         nuevoObjeto->CreateQuad(2, 10);
         nuevoObjeto->Position = Vector2((rand() % 60)-30, (rand() % 60) - 30);
         cosas.push_back(nuevoObjeto);

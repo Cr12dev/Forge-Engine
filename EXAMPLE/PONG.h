@@ -41,12 +41,11 @@ void Start() {
     
     Window = glfwGetCurrentContext();
 
-    //COLORS
     Pala.color = Color(255, 255, 0);
     Pala2.color = Color(255, 0, 0);
     Pelota.color = Color(255, 255, 0);
 
-    //Añadir una textura al objeto
+    PutVsync();
 }
 
 void Update() {
@@ -93,4 +92,5 @@ void Update() {
         mulYPelota *= -1;
         Pelota.Position = Vector2 (0.0f, 0.0f);
     }
+    std::cout << 1.0f / deltaTime() << " FPS" << std::endl;
 }

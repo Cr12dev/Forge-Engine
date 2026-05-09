@@ -285,6 +285,14 @@ inline Color GetBackgroundColor() {
     return backgroundColor;
 }
 
+inline void PutVsync() {
+    glfwSwapInterval(1);
+}
+
+inline void QuitVsync() {
+    glfwSwapInterval(0);
+}
+
 inline unsigned int LoadTexture(const char* path)
 {
     unsigned int textureID;
