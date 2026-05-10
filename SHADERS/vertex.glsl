@@ -12,8 +12,7 @@ uniform mat4 translacion;
 uniform mat4 escalaPrivada;
 uniform mat4 escala;
 
-void main() {
-    gl_Position = proyeccion * translacion * rotacion * (escala * escalaPrivada) * vec4(aPos, 1.0);
-    ourColor = aColor;
-    TexCoord = aTexCoord;
+void main()
+{
+    gl_Position = proyeccion * translacion * rotacion * escala * vec4(aPos, 1.0);
 }

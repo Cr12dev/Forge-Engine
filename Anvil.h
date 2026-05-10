@@ -139,64 +139,22 @@ class AnvilObject {
         // 4 vértices con: posición(x,y,z), color(r,g,b), coordenadas textura(u,v)
         std::vector<float> ListaVertices = {
             // Vértice 1 (top-right)
-            mitadAncho, mitadAlto, 0.0f,    1.0f, 1.0f, 1.0f,    1.0f, 1.0f,
+            -mitadAncho,  mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, // Arriba-Izquierda
+            -mitadAncho, -mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, // Abajo-Izquierda
+            mitadAncho,  mitadAlto, 0.0f, 1.0f, 1.0f, 1.0f, // Arriba-Derecha
+            mitadAncho, -mitadAlto, 0.0f,    1.0f, 1.0f, 1.0f,    1.0f, 1.0f,
             // Vértice 2 (bottom-right)
             mitadAncho, -mitadAlto, 0.0f,   1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
             // Vértice 3 (top-left)
             -mitadAncho, mitadAlto, 0.0f,   1.0f, 1.0f, 1.0f,    0.0f, 1.0f,
             // Vértice 4 (bottom-left)
-            -mitadAncho, -mitadAlto, 0.0f,  1.0f, 1.0f, 1.0f,    0.0f, 0.0f
+            -mitadAncho, -mitadAlto, 0.0f,  1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f  // Abajo-Derecha
         };
         cosasARenderizar.push_back(ListaVertices);
     };
-    /*
-     * @brief Crea un circulo con el parametro del radio
-     * @param radio radio de la circunferencia
-     ``` 
-     * @example
-     * AnvilObject obj;
-     * obj.CreateCircle(50);
-     ```
-     */
-    void CreateCircle(int radio){
-        float medidaRadio = radio / 50.0f;
-        Width = radio * 2;
-        Height = radio * 2;
-        primitiveType = TRIANGLE_FAN;
-        
-        int numSegments = 32;
-        std::vector<float> ListaVertices;
-        
-        // Centro del circulo (primer vertice del triangle fan)
-        ListaVertices.push_back(0.0f);
-        ListaVertices.push_back(0.0f);
-        ListaVertices.push_back(0.0f);
-        ListaVertices.push_back(1.0f);
-        ListaVertices.push_back(1.0f);
-        ListaVertices.push_back(1.0f);
-        ListaVertices.push_back(0.5f);
-        ListaVertices.push_back(0.5f);
-        
-        // Generar vertices alrededor del circulo
-        for (int i = 0; i <= numSegments; i++) {
-            float angle = (2.0f * M_PI * i) / numSegments;
-            float x = cos(angle) * medidaRadio;
-            float y = sin(angle) * medidaRadio;
-            float u = 0.5f + cos(angle) * 0.5f;
-            float v = 0.5f + sin(angle) * 0.5f;
-            
-            ListaVertices.push_back(x);
-            ListaVertices.push_back(y);
-            ListaVertices.push_back(0.0f);
-            ListaVertices.push_back(1.0f);
-            ListaVertices.push_back(1.0f);
-            ListaVertices.push_back(1.0f);
-            ListaVertices.push_back(u);
-            ListaVertices.push_back(v);
-        }
-        
-        cosasARenderizar.push_back(ListaVertices);
-    }
+    // Falta por arreglar
+    // Sistema abba con adaptacion a la rotacion (no funcionaba)
+    // Sistema actual arreglo por chat gpt (sigue sin funcionar)
     Collision2D CheckCollision() {
         Collision2D collision2d;
         collision2d.Bool = false;
@@ -230,12 +188,11 @@ class AnvilObject {
                 float otroW_env = (otro->Width * cO) + (otro->Height * sO);
                 float otroH_env = (otro->Width * sO) + (otro->Height * cO);
 
-                float otroMinX = otro->Position.x - (otroW_env);
-                float otroMaxX = otro->Position.x + (otroW_env);
-                float otroMinY = otro->Position.y - (otroH_env);
-                float otroMaxY = otro->Position.y + (otroH_env);
-
-                // Comprobación AABB 
+                float otroMinX = otro->Position.x - (otroW_env / 2.0f);
+                float otroMaxX = otro->Position.x + (otroW_env / 2.0f);
+                float otroMinY = otro->Position.y - (otroH_env / 2.0f);
+                float otroMaxY = otro->Position.y + (otroH_env / 2.0f);
+                // Comprobación AABB estándar
                 bool check1 = (thisMaxX >= otroMinX && otroMaxX >= thisMinX);
                 bool check2 = (thisMaxY >= otroMinY && otroMaxY >= thisMinY);
 

@@ -125,8 +125,8 @@ int main() {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glBufferData(GL_ARRAY_BUFFER, 1000, NULL, GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     //color
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3*sizeof(float)));
@@ -214,22 +214,7 @@ int main() {
             glUniformMatrix4fv(escalaPrivadaID, 1, GL_FALSE, matrizEscalaPrivada);
             glUniformMatrix4fv(escalaID, 1, GL_FALSE, matrizEscala);
             glUniform3fv(objectColorID, 1, colorfloat);
-            
-            // Bind texture if exists
-            bool hasTexture = (objetosLista[i]->textureID != 0);
-            glUniform1i(glGetUniformLocation(shaderProgram, "useTexture"), hasTexture);
-            
-            if (hasTexture) {
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, objetosLista[i]->textureID);
-                glUniform1i(glGetUniformLocation(shaderProgram, "ourTexture"), 0);
-            } else {
-                glBindTexture(GL_TEXTURE_2D, 0);
-            }
-            
-            GLenum drawMode = (objetosLista[i]->primitiveType == TRIANGLE_FAN) ? GL_TRIANGLE_FAN : GL_TRIANGLE_STRIP;
-            int vertexCount = lista[i].size() / 8; // Cada vértice tiene 8 floats (3 pos + 3 color + 2 texcoord)
-            glDrawArrays(drawMode, 0, vertexCount);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, lista[i].size()/6);
         }   
 
         float deltatime = glfwGetTime() - ultimoframe;

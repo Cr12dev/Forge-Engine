@@ -99,11 +99,7 @@ void Update() {
     if (colision1.Bool)
     {
         mulXPelota *= -1;
-
-        
     }
-
-
     if (Pelota.Position.x < -150.0f)
     {
         mulXPelota = 1.0f;
