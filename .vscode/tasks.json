@@ -6,8 +6,12 @@
             "type": "shell",
             "command": "g++-13",
             "args": [
-                "-g",
                 "-std=c++23",
+                "-Ofast", 
+                "-fopenmp",
+                "-march=native", 
+                "-ffast-math", 
+                "-flto", 
                 "-fdiagnostics-color=always",
                 "${file}",
                 "-o",

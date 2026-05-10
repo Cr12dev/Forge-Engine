@@ -18,6 +18,8 @@ inline std::vector<AnvilObject*> objetosReferenciados;
 //delta time oculto para pasar desde el motor
 inline float dontAskWhy;
 
+
+
 struct Vector2 {
     float x = 0.0f;
     float y = 0.0f;
@@ -109,7 +111,7 @@ class AnvilObject {
         unsigned int textureID = 0;
     //agrega el objeto creado a una lista para luego ser recorrido y aplicar sus propiedad al shader
     AnvilObject() {
-        this->color = Color(1.0f, 1.0f, 1.0f);
+        this->color = Color(255, 255, 255);
         objetosReferenciados.push_back(this);
     }
     //crea un cuadrado con los parametros ancho y alto
@@ -247,6 +249,14 @@ inline void SetBackgroundColor(float r, float g, float b) {
 
 inline Color GetBackgroundColor() {
     return backgroundColor;
+}
+
+inline void PutVsync() {
+    glfwSwapInterval(1);
+}
+
+inline void QuitVsync() {
+    glfwSwapInterval(0);
 }
 
 inline unsigned int LoadTexture(const char* path)
